@@ -1,0 +1,15 @@
+name: CGV Ticket Alert
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository Ready
+        run: |
+          echo "CGV ticket alert workflow installed"
