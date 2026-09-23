@@ -2,7 +2,8 @@ name: CGV Ticket Alert
 
 on:
   schedule:
-    - cron: '0 */6 * * *'
+    # GitHub가 허용하는 최소 주기로 실행 (5분)
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -10,6 +11,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Repository Ready
+      - name: 코드 가져오기
+        uses: actions/checkout@v3
+
+      - name: 파이썬 환경 설정
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 라이브러리 설치
         run: |
-          echo "CGV ticket alert workflow installed"
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: 예매 감지 스크립트 실행
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          python check_ticket.py
